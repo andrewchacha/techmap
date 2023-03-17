@@ -1,8 +1,8 @@
-folium==0.14.0
-matplotlib==3.6.3
-numpy==1.23.5
-pandas==1.5.3
-streamlit==1.20.0
-streamlit_folium==0.11.0
-streamlit_option_menu==0.3.2
-wordcloud==1.8.2.2
+folium
+matplotlib
+numpy
+pandas
+streamlit
+streamlit_folium
+streamlit_option_menu
+wordcloud
