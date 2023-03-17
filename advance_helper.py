@@ -16,7 +16,7 @@ def display_skill_filters(df):
         options=df['tech_word'].unique()
     )
     return skill
-@st.cache_data()
+
 def display_skills(dataset,skill,year):
     no_years = len(year)
     no_skills = len(skill)
