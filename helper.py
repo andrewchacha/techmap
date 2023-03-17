@@ -62,7 +62,6 @@ def display_month_filters(df):
     month = st.sidebar.selectbox('Month', month_list)
     return month
 
-@st.cache_data()
 def display_all_results(dataset, year, country, title, month):
     if (country and not (title or month or year)):
         used_dataset = dataset[(dataset['country'] == country)]
