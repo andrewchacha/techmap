@@ -13,10 +13,6 @@ import numpy as np
 my_path = os.getcwd()
 print(my_path)
 
-from sqlalchemy import create_engine
-#my_conn = create_engine("mysql+pymysql://root:Tanzania1@localhost:3306/techtrends")
-#query = "SELECT * FROM techtrends"
-#dataset = pd.read_sql(query, my_conn)
 
 dataset = pd.read_csv(my_path+'/march2023.csv')
 
