@@ -11,11 +11,6 @@ import advance_helper
 import association
 import numpy as np
 
-from statsmodels.tsa.seasonal import seasonal_decompose
-from prophet import Prophet
-from prophet.diagnostics import cross_validation
-from prophet.diagnostics import performance_metrics
-from prophet.plot import plot_cross_validation_metric
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
