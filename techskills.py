@@ -23,14 +23,10 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 my_path = os.getcwd()
 print(my_path)
 
-from sqlalchemy import create_engine
-my_conn = create_engine("mysql+pymysql://root:Tanzania1@localhost:3306/techtrends")
-query = "SELECT * FROM techtrends"
-dataset = pd.read_sql(query, my_conn)
-dataset['tech_word'] = dataset['tech_word'] .str.strip()
 
-#dataset = pd.read_csv(my_path+'/march2023.csv')
-#dataset['tech_word'] = dataset['tech_word'] .str.strip()
+
+dataset = pd.read_csv(my_path+'/march2023.csv')
+dataset['tech_word'] = dataset['tech_word'] .str.strip()
 
 APP_TITTLE = "TREND OF TECH ITEMS IN IT JOB ADS"
 
