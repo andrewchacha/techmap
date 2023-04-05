@@ -13,10 +13,11 @@ def display_time_filters(df):
 def display_skill_filters(df):
     skill = st.sidebar.multiselect(
         "Select Skill(s)",
-        options=df['tech_word'].unique()
+        options=df['tech_word'].unique(),
+        default=None
     )
     return skill
-
+@st.cache_data()
 def display_skills(dataset,skill,year):
     no_years = len(year)
     no_skills = len(skill)

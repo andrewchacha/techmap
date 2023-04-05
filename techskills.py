@@ -8,13 +8,29 @@ import os
 from streamlit_option_menu import option_menu
 import helper
 import advance_helper
+import association
+import getforecast
 import numpy as np
+
+from statsmodels.tsa.seasonal import seasonal_decompose
+from prophet import Prophet
+from prophet.diagnostics import cross_validation
+from prophet.diagnostics import performance_metrics
+from prophet.plot import plot_cross_validation_metric
+
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
 my_path = os.getcwd()
 print(my_path)
 
+from sqlalchemy import create_engine
+my_conn = create_engine("mysql+pymysql://root:Tanzania1@localhost:3306/techtrends")
+query = "SELECT * FROM techtrends"
+dataset = pd.read_sql(query, my_conn)
+dataset['tech_word'] = dataset['tech_word'] .str.strip()
 
-dataset = pd.read_csv(my_path+'/march2023.csv')
+#dataset = pd.read_csv(my_path+'/march2023.csv')
+#dataset['tech_word'] = dataset['tech_word'] .str.strip()
 
 APP_TITTLE = "TREND OF TECH ITEMS IN IT JOB ADS"
 
@@ -36,8 +52,8 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 with st.sidebar:
     selected = option_menu(
         menu_title=None,
-        options=["Home","Skills"],
-        icons=["house","bar-chart-fill"],
+        options=["Home","Trends","Association"],
+        icons=["house","bar-chart-fill","bricks"],
         default_index=0,
    )
 
@@ -114,7 +130,7 @@ if selected == "Home":
                 st.pyplot(fig)
 
 
-if selected == "Skills":
+if selected == "Trends":
     st.subheader(f'Advanced Skills search')
     hide_table_row_index = """
                         <style>
@@ -149,6 +165,41 @@ if selected == "Skills":
         st.pyplot(fig)
 
         st.table(skill_df)
+
+if selected == "Association":
+    hide_table_row_index = """
+                           <style>
+                           thead tr th:first-child {display:none}
+                           tbody th {display:none}
+                           </style>
+                           """
+    st.markdown(hide_table_row_index, unsafe_allow_html=True)
+    def main():
+        st.subheader("Skills Association")
+
+        areas = ['','Software','Data','Developer','Engineer','Support','Network']
+        areas.sort(reverse=False)
+        areas_q = st.sidebar.selectbox('Job Title',areas)
+
+
+        if areas_q == 'Software':
+            adata = pd.read_csv('data/software_association.csv')
+        elif areas_q == 'Data':
+            adata = pd.read_csv('data/data_association.csv')
+        elif areas_q == 'Developer':
+            adata = pd.read_csv('data/dev_association.csv')
+        elif areas_q == 'Engineer':
+            st.write("Waiting Data")
+        elif areas_q == 'Support':
+            st.write("Waiting Data")
+        elif areas_q == 'Network':
+            st.write("Waiting Data")
+        else:
+            adata = pd.read_csv('data/all_association.csv')
+
+        selected_key = association.fetch_skill(adata)
+        associations = association.get_association(adata,selected_key)
+        st.table(associations)
 
 
 if __name__ == '__main__':
