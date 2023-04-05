@@ -9,7 +9,6 @@ from streamlit_option_menu import option_menu
 import helper
 import advance_helper
 import association
-import getforecast
 import numpy as np
 
 from statsmodels.tsa.seasonal import seasonal_decompose
@@ -25,7 +24,7 @@ print(my_path)
 
 
 
-dataset = pd.read_csv(my_path+'/march2023.csv')
+dataset = pd.read_csv(my_path+'/april.csv')
 dataset['tech_word'] = dataset['tech_word'] .str.strip()
 
 APP_TITTLE = "TREND OF TECH ITEMS IN IT JOB ADS"
