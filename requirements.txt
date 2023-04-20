@@ -6,3 +6,4 @@ streamlit
 streamlit_folium
 streamlit_option_menu
 wordcloud
+pyvis
