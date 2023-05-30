@@ -9,18 +9,30 @@ from streamlit_option_menu import option_menu
 import helper
 import advance_helper
 import association
+#import getforecast
 import numpy as np
+from pyvis.network import Network
+import streamlit.components.v1 as components
 
+#from statsmodels.tsa.seasonal import seasonal_decompose
+#from prophet import Prophet
+#from prophet.diagnostics import cross_validation
+#from prophet.diagnostics import performance_metrics
+#from prophet.plot import plot_cross_validation_metric
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 my_path = os.getcwd()
 print(my_path)
 
-
-
-dataset = pd.read_csv(my_path+'/april.csv')
+from sqlalchemy import create_engine
+my_conn = create_engine("mysql+pymysql://root:Tanzania1@localhost:3306/techtrends")
+query = "SELECT * FROM techtrends"
+dataset = pd.read_sql(query, my_conn)
 dataset['tech_word'] = dataset['tech_word'] .str.strip()
+
+#dataset = pd.read_csv(my_path+'/march2023.csv')
+#dataset['tech_word'] = dataset['tech_word'] .str.strip()
 
 APP_TITTLE = "TREND OF TECH ITEMS IN IT JOB ADS"
 
@@ -174,22 +186,65 @@ if selected == "Association":
 
         if areas_q == 'Software':
             adata = pd.read_csv('data/software_association.csv')
+            bdata = pd.read_csv('data/software.csv')
+
         elif areas_q == 'Data':
             adata = pd.read_csv('data/data_association.csv')
+            bdata = pd.read_csv('data/data.csv')
+
         elif areas_q == 'Developer':
             adata = pd.read_csv('data/dev_association.csv')
+            bdata = pd.read_csv('data/developer.csv')
+
         elif areas_q == 'Engineer':
-            st.write("Waiting Data")
+            adata = pd.read_csv('data/engineer_association.csv')
+            bdata=pd.read_csv('data/engineer.csv')
+
         elif areas_q == 'Support':
-            st.write("Waiting Data")
+            adata = pd.read_csv('data/support_association.csv')
+            bdata = pd.read_csv('data/support.csv')
+
         elif areas_q == 'Network':
-            st.write("Waiting Data")
+            adata = pd.read_csv('data/network_association.csv')
+            bdata = pd.read_csv('data/network.csv.csv')
         else:
             adata = pd.read_csv('data/all_association.csv')
+            bdata = pd.read_csv('data/all.csv')
 
         selected_key = association.fetch_skill(adata)
         associations = association.get_association(adata,selected_key)
         st.table(associations)
+
+        #st.subheader(f'Top 30 words appearing with {selected_key} ')
+        top_asscociations = association.fetch_top(bdata,selected_key)
+        #for row in top_asscociations:
+        #    st.write(f'{row},')
+
+        soft_net = Network(height='750px', width='100%', bgcolor='#222222', font_color='white', notebook=True)
+        soft_net.repulsion()
+        for e in top_asscociations:
+            src = e[0]
+            dist = e[1]
+            w = np.log(e[2])
+
+            soft_net.add_node(src, src, title=src)
+            soft_net.add_node(dist, dist, title=dist)
+            soft_net.add_edge(src, dist, value=w)
+
+        neighbor_map = soft_net.get_adj_list()
+        for node in soft_net.nodes:
+            node['title'] += ' Neighbors:' + ''.join(neighbor_map[node['id']])
+            node['value'] = len(neighbor_map[node['id']])
+
+        soft_net.show('data.html')
+
+        from IPython.core.display import display, HTML
+        display(HTML("data.html"))
+
+        st.header(f"{selected_key} Network")
+        HtmlFile = open("data.html", 'r', encoding='utf-8')
+        source_code = HtmlFile.read()
+        components.html(source_code, height=760)
 
 
 if __name__ == '__main__':
