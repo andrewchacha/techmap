@@ -197,7 +197,7 @@ if selected == "Association":
 
         elif areas_q == 'Network':
             adata = pd.read_csv('data/network_association.csv')
-            bdata = pd.read_csv('data/network.csv.csv')
+            bdata = pd.read_csv('data/network.csv')
         else:
             adata = pd.read_csv('data/all_association.csv')
             bdata = pd.read_csv('data/all.csv')
