@@ -15,7 +15,6 @@ import streamlit.components.v1 as components
 
 
 
-st.set_option('deprecation.showPyplotGlobalUse', False)
 
 my_path = os.getcwd()
 print(my_path)
@@ -228,9 +227,6 @@ if selected == "Association":
             node['value'] = len(neighbor_map[node['id']])
 
         soft_net.show('data.html')
-
-        from IPython.core.display import display, HTML
-        display(HTML("data.html"))
 
         st.header(f"{selected_key} Network")
         HtmlFile = open("data.html", 'r', encoding='utf-8')

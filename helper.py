@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import folium
 from streamlit_folium import st_folium
 import os
@@ -116,7 +117,7 @@ def display_all_results(dataset, year, country, title, month):
     totalads = used_dataset.groupby(['dyear', 'dmonth', 'dposition', 'country'])['allads'].unique().sum()
     all_ads = used_dataset.groupby(['tech_word'])['wcount'].sum().reset_index()
     sorted_all_ads = all_ads.sort_values(by=['wcount'], ascending=False)
-    sorted_all_ads['Total Ads'] = int(totalads)
+    sorted_all_ads['Total Ads'] = int(np.sum(totalads))
     sorted_all_ads['Percentage'] = round((sorted_all_ads['wcount'] / sorted_all_ads['Total Ads']) * 100).astype(int)
     sorted_all_ads.rename(columns={'tech_word': 'Keyword', 'wcount': 'Number of ads'}, inplace=True)
     return sorted_all_ads.head(50)
